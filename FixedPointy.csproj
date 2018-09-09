@@ -68,6 +68,8 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="Collisions\PolygonCollision.cs" />
+    <Compile Include="Collisions\PolygonCollisionResult.cs" />
     <Compile Include="Fix.cs" />
     <Compile Include="FixConst.cs" />
     <Compile Include="FixMath.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="FixTrans2.cs" />
     <Compile Include="FixVec3.cs" />
     <Compile Include="FixTrans3.cs" />
+    <Compile Include="FixPolygon.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

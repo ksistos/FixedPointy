@@ -1,5 +1,6 @@
 /* FixedPointy - A simple fixed-point math library for C#.
- * 
+ *
+ * Copyright (c) 2018 Dmitry Gayazov
  * Copyright (c) 2013 Jameson Ernst
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,100 +22,109 @@
  * THE SOFTWARE.
  */
 
-using System;
-
 namespace FixedPointy {
-	public struct FixVec3 {
-		public static readonly FixVec3 Zero = new FixVec3();
-		public static readonly FixVec3 One = new FixVec3(1, 1, 1);
-		public static readonly FixVec3 UnitX = new FixVec3(1, 0, 0);
-		public static readonly FixVec3 UnitY = new FixVec3(0, 1, 0);
-		public static readonly FixVec3 UnitZ = new FixVec3(0, 0, 1);
+  public struct FixVec3 {
+    public static readonly FixVec3 Zero = new FixVec3();
+    public static readonly FixVec3 One = new FixVec3(1, 1, 1);
+    public static readonly FixVec3 UnitX = new FixVec3(1, 0, 0);
+    public static readonly FixVec3 UnitY = new FixVec3(0, 1, 0);
+    public static readonly FixVec3 UnitZ = new FixVec3(0, 0, 1);
 
-		public static implicit operator FixVec3 (FixVec2 value) {
-			return new FixVec3(value.X, value.Y, 0);
-		}
+    public static implicit operator FixVec3(FixVec2 value) {
+      return new FixVec3(value.X, value.Y, 0);
+    }
 
-		public static FixVec3 operator + (FixVec3 rhs) {
-			return rhs;
-		}
-		public static FixVec3 operator - (FixVec3 rhs) {
-			return new FixVec3(-rhs._x, -rhs._y, -rhs._z);
-		}
+    public static FixVec3 operator +(FixVec3 rhs) {
+      return rhs;
+    }
 
-		public static FixVec3 operator + (FixVec3 lhs, FixVec3 rhs) {
-			return new FixVec3(lhs._x + rhs._x, lhs._y + rhs._y, lhs._z + rhs._z);
-		}
-		public static FixVec3 operator - (FixVec3 lhs, FixVec3 rhs) {
-			return new FixVec3(lhs._x - rhs._x, lhs._y - rhs._y, lhs._z - rhs._z);
-		}
+    public static FixVec3 operator -(FixVec3 rhs) {
+      return new FixVec3(-rhs.X, -rhs.Y, -rhs.Z);
+    }
 
-		public static FixVec3 operator + (FixVec3 lhs, Fix rhs) {
-			return lhs.ScalarAdd(rhs);
-		}
-		public static FixVec3 operator + (Fix lhs, FixVec3 rhs) {
-			return rhs.ScalarAdd(lhs);
-		}
-		public static FixVec3 operator - (FixVec3 lhs, Fix rhs) {
-			return new FixVec3(lhs._x - rhs, lhs._y - rhs, lhs._z - rhs);
-		}
-		public static FixVec3 operator * (FixVec3 lhs, Fix rhs) {
-			return lhs.ScalarMultiply(rhs);
-		}
-		public static FixVec3 operator * (Fix lhs, FixVec3 rhs) {
-			return rhs.ScalarMultiply(lhs);
-		}
-		public static FixVec3 operator / (FixVec3 lhs, Fix rhs) {
-			return new FixVec3(lhs._x / rhs, lhs._y / rhs, lhs._z / rhs);
-		}
+    public static FixVec3 operator +(FixVec3 lhs, FixVec3 rhs) {
+      return new FixVec3(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z);
+    }
 
-		Fix _x, _y, _z;
+    public static FixVec3 operator -(FixVec3 lhs, FixVec3 rhs) {
+      return new FixVec3(lhs.X - rhs.X, lhs.Y - rhs.Y, lhs.Z - rhs.Z);
+    }
 
-		public FixVec3 (Fix x, Fix y, Fix z) {
-			_x = x;
-			_y = y;
-			_z = z;
-		}
+    public static FixVec3 operator +(FixVec3 lhs, Fix rhs) {
+      return lhs.ScalarAdd(rhs);
+    }
 
-		public Fix X { get { return _x; } }
-		public Fix Y { get { return _y; } }
-		public Fix Z { get { return _z; } }
+    public static FixVec3 operator +(Fix lhs, FixVec3 rhs) {
+      return rhs.ScalarAdd(lhs);
+    }
 
-		public Fix Dot (FixVec3 rhs) {
-			return _x * rhs._x + _y * rhs._y + _z * rhs._z;
-		}
+    public static FixVec3 operator -(FixVec3 lhs, Fix rhs) {
+      return new FixVec3(lhs.X - rhs, lhs.Y - rhs, lhs.Z - rhs);
+    }
 
-		public FixVec3 Cross (FixVec3 rhs) {
-			return new FixVec3(
-				_y * rhs._z - _z * rhs._y,
-				_z * rhs._x - _x * rhs._z,
-				_x * rhs._y - _y * rhs._x
-			);
-		}
+    public static FixVec3 operator *(FixVec3 lhs, Fix rhs) {
+      return lhs.ScalarMultiply(rhs);
+    }
 
-		FixVec3 ScalarAdd (Fix value) {
-			return new FixVec3(_x + value, _y + value, _z + value);
-		}
-		FixVec3 ScalarMultiply (Fix value) {
-			return new FixVec3(_x * value, _y * value, _z * value);
-		}
+    public static FixVec3 operator *(Fix lhs, FixVec3 rhs) {
+      return rhs.ScalarMultiply(lhs);
+    }
 
-		public Fix GetMagnitude () {
-			ulong N = (ulong)((long)_x.Raw * (long)_x.Raw + (long)_y.Raw * (long)_y.Raw + (long)_z.Raw * (long)_z.Raw);
+    public static FixVec3 operator /(FixVec3 lhs, Fix rhs) {
+      return new FixVec3(lhs.X / rhs, lhs.Y / rhs, lhs.Z / rhs);
+    }
 
-			return new Fix((int)(FixMath.SqrtULong(N << 2) + 1) >> 1);
-		}
+    public FixVec3(Fix x, Fix y, Fix z) {
+      X = x;
+      Y = y;
+      Z = z;
+    }
 
-		public FixVec3 Normalize () {
-			if (_x == 0 && _y == 0 && _z == 0)
-				return FixVec3.Zero;
+    public Fix X { get; }
 
-			var m = GetMagnitude();
-			return new FixVec3(_x / m, _y / m, _z / m);
-		}
+    public Fix Y { get; }
 
-		public override string ToString () {
-			return string.Format("({0}, {1}, {2})", _x, _y, _z);
-		}
-	}
+    public Fix Z { get; }
+
+    public Fix Dot(FixVec3 rhs) {
+      return X * rhs.X + Y * rhs.Y + Z * rhs.Z;
+    }
+
+    public FixVec3 Cross(FixVec3 rhs) {
+      return new FixVec3(
+        Y * rhs.Z - Z * rhs.Y,
+        Z * rhs.X - X * rhs.Z,
+        X * rhs.Y - Y * rhs.X
+      );
+    }
+
+    private FixVec3 ScalarAdd(Fix value) {
+      return new FixVec3(X + value, Y + value, Z + value);
+    }
+
+    private FixVec3 ScalarMultiply(Fix value) {
+      return new FixVec3(X * value, Y * value, Z * value);
+    }
+
+    public Fix GetMagnitude() {
+      if (X == 0 && Y == 0 && Z == 0)
+        return Fix.Zero;
+
+      var n = (ulong)(X.Raw * (long)X.Raw + Y.Raw * (long)Y.Raw + Z.Raw * (long)Z.Raw);
+
+      return new Fix((int)(FixMath.SqrtULong(n << 2) + 1) >> 1);
+    }
+
+    public FixVec3 Normalize() {
+      if (X == 0 && Y == 0 && Z == 0)
+        return Zero;
+
+      var m = GetMagnitude();
+      return new FixVec3(X / m, Y / m, Z / m);
+    }
+
+    public override string ToString() {
+      return $"({X}, {Y}, {Z})";
+    }
+  }
 }
