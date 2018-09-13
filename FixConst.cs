@@ -33,7 +33,7 @@ namespace FixedPointy {
     }
 
     public static implicit operator FixConst(double value) {
-      if (value < int.MinValue || value >= int.MaxValue + 1L)
+      if(value < int.MinValue || value >= int.MaxValue + 1L)
         throw new OverflowException();
 
       var floor = Math.Floor(value);
@@ -45,7 +45,7 @@ namespace FixedPointy {
     }
 
     public static explicit operator int(FixConst value) {
-      if (value.Raw > 0)
+      if(value.Raw > 0)
         return (int)(value.Raw >> 32);
 
       return (int)((value.Raw + uint.MaxValue) >> 32);
@@ -94,7 +94,7 @@ namespace FixedPointy {
     public long Raw { get; }
 
     public override bool Equals(object obj) {
-      return obj is FixConst fixConst && fixConst == this;
+      return obj is FixConst && (FixConst)obj == this;
     }
 
     public override int GetHashCode() {
@@ -103,13 +103,13 @@ namespace FixedPointy {
 
     public override string ToString() {
       var sb = new StringBuilder();
-      if (Raw < 0)
+      if(Raw < 0)
         sb.Append(CultureInfo.CurrentCulture.NumberFormat.NegativeSign);
       long abs = (int)this;
       abs = abs < 0 ? -abs : abs;
       sb.Append(abs.ToString());
       var fraction = (ulong)(Raw & uint.MaxValue);
-      if (fraction == 0)
+      if(fraction == 0)
         return sb.ToString();
 
       fraction = Raw < 0 ? uint.MaxValue + 1L - fraction : fraction;

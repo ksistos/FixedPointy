@@ -107,7 +107,7 @@ namespace FixedPointy {
     }
 
     public Fix GetMagnitude() {
-      if (X == 0 && Y == 0 && Z == 0)
+      if(X == 0 && Y == 0 && Z == 0)
         return Fix.Zero;
 
       var n = (ulong)(X.Raw * (long)X.Raw + Y.Raw * (long)Y.Raw + Z.Raw * (long)Z.Raw);
@@ -116,7 +116,7 @@ namespace FixedPointy {
     }
 
     public FixVec3 Normalize() {
-      if (X == 0 && Y == 0 && Z == 0)
+      if(X == 0 && Y == 0 && Z == 0)
         return Zero;
 
       var m = GetMagnitude();

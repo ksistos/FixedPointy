@@ -87,8 +87,8 @@ namespace FixedPointy {
 
     public static FixTrans3 MakeRotation(FixVec3 degrees) {
       return MakeRotationX(degrees.X)
-        .RotateY(degrees.Y)
-        .RotateZ(degrees.Z);
+             .RotateY(degrees.Y)
+             .RotateZ(degrees.Z);
     }
 
     public static FixTrans3 MakeScale(FixVec3 scale) {
@@ -129,10 +129,10 @@ namespace FixedPointy {
     // todo: move to quaternions
     public FixTrans3(FixVec3 position, FixVec3 scale, FixVec3 rotation) {
       this = MakeRotationX(rotation.X)
-        .RotateY(rotation.Y)
-        .RotateZ(rotation.Z)
-        .Scale(scale)
-        .Translate(position);
+             .RotateY(rotation.Y)
+             .RotateZ(rotation.Z)
+             .Scale(scale)
+             .Translate(position);
     }
 
     public Fix M11 { get; }
@@ -147,7 +147,7 @@ namespace FixedPointy {
     public Fix M32 { get; }
     public Fix M33 { get; }
     public Fix M34 { get; }
-    
+
     public FixTrans3 RotateZ(Fix degrees) {
       return MakeRotationZ(degrees) * this;
     }

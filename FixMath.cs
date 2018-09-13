@@ -37,9 +37,9 @@ namespace FixedPointy {
     private static Fix[] _cordicGains;
 
     static FixMath() {
-      if (QuarterSineResPower >= Fix.FRACTIONAL_BITS)
+      if(QuarterSineResPower >= Fix.FRACTIONAL_BITS)
         throw new Exception("_quarterSineResPower must be less than Fix.FractionalBits.");
-      if (QuarterSineConsts.Length != 90 * (1 << QuarterSineResPower) + 1)
+      if(QuarterSineConsts.Length != 90 * (1 << QuarterSineResPower) + 1)
         throw new Exception("_quarterSineConst.Length must be 90 * 2^(_quarterSineResPower) + 1.");
 
       Pi = PiConst;
@@ -59,9 +59,9 @@ namespace FixedPointy {
     }
 
     public static Fix Sign(Fix value) {
-      if (value < 0)
+      if(value < 0)
         return -1;
-      if (value > 0)
+      if(value > 0)
         return 1;
 
       return 0;
@@ -76,7 +76,7 @@ namespace FixedPointy {
     }
 
     public static Fix Truncate(Fix value) {
-      if (value < 0)
+      if(value < 0)
         return new Fix((value.Raw + Fix.FRACTION_RANGE) & Fix.INTEGER_MASK);
 
       return new Fix(value.Raw & Fix.INTEGER_MASK);
@@ -95,10 +95,10 @@ namespace FixedPointy {
     }
 
     public static Fix Sqrt(Fix value) {
-      if (value.Raw < 0)
-        throw new ArgumentOutOfRangeException("value", "Value must be non-negative.");
+      if(value.Raw < 0)
+        throw new ArgumentOutOfRangeException(nameof(value), "Value must be non-negative.");
 
-      if (value.Raw == 0)
+      if(value.Raw == 0)
         return 0;
 
       return new Fix((int)(SqrtULong((ulong)value.Raw << (Fix.FRACTIONAL_BITS + 2)) + 1) >> 1);
@@ -106,9 +106,9 @@ namespace FixedPointy {
 
     internal static uint SqrtULong(ulong n) {
       ulong x = 1L << ((31 + Fix.FRACTIONAL_BITS + 2 + 1) / 2);
-      while (true) {
+      while(true) {
         var y = (x + n / x) >> 1;
-        if (y >= x)
+        if(y >= x)
           return (uint)x;
 
         x = y;
@@ -128,36 +128,34 @@ namespace FixedPointy {
       var t = raw & ((1 << (Fix.FRACTIONAL_BITS - QuarterSineResPower)) - 1);
       raw = raw >> (Fix.FRACTIONAL_BITS - QuarterSineResPower);
 
-      if (t == 0)
+      if(t == 0)
         return CosRawLookup(raw);
 
       var v1 = CosRawLookup(raw);
       var v2 = CosRawLookup(raw + 1);
 
-      return new Fix(
-        (int)(
-          (
-            (long)v1.Raw * ((1 << (Fix.FRACTIONAL_BITS - QuarterSineResPower)) - t)
-            + (long)v2.Raw * t
-            + (1 << (Fix.FRACTIONAL_BITS - QuarterSineResPower - 1))
-          )
-          >> (Fix.FRACTIONAL_BITS - QuarterSineResPower)
+      return new Fix((int)(
+        (
+          (long)v1.Raw * ((1 << (Fix.FRACTIONAL_BITS - QuarterSineResPower)) - t)
+          + (long)v2.Raw * t
+          + (1 << (Fix.FRACTIONAL_BITS - QuarterSineResPower - 1))
         )
-      );
+        >> (Fix.FRACTIONAL_BITS - QuarterSineResPower)
+      ));
     }
 
     private static Fix CosRawLookup(int raw) {
       raw %= 360 * (1 << QuarterSineResPower);
 
-      if (raw < 90 * (1 << QuarterSineResPower))
+      if(raw < 90 * (1 << QuarterSineResPower))
         return QuarterSine[90 * (1 << QuarterSineResPower) - raw];
 
-      if (raw < 180 * (1 << QuarterSineResPower)) {
+      if(raw < 180 * (1 << QuarterSineResPower)) {
         raw -= 90 * (1 << QuarterSineResPower);
         return -QuarterSine[raw];
       }
 
-      if (raw < 270 * (1 << QuarterSineResPower)) {
+      if(raw < 270 * (1 << QuarterSineResPower)) {
         raw -= 180 * (1 << QuarterSineResPower);
         return -QuarterSine[90 * (1 << QuarterSineResPower) - raw];
       }
@@ -183,19 +181,19 @@ namespace FixedPointy {
     }
 
     public static Fix Atan2(Fix y, Fix x) {
-      if (x == 0 && y == 0)
-        throw new ArgumentOutOfRangeException("y and x", "x and y cannot both be 0.");
+      if(x == 0 && y == 0)
+        throw new ArgumentOutOfRangeException("x and y", "x and y cannot both be 0.");
 
       Fix angle = 0;
       Fix xNew, yNew;
 
-      if (x < 0) {
-        if (y < 0) {
+      if(x < 0) {
+        if(y < 0) {
           xNew = -y;
           yNew = x;
           angle = -90;
         }
-        else if (y > 0) {
+        else if(y > 0) {
           xNew = y;
           yNew = -x;
           angle = 90;
@@ -210,13 +208,13 @@ namespace FixedPointy {
         y = yNew;
       }
 
-      for (var i = 0; i < Fix.FRACTIONAL_BITS + 2; i++) {
-        if (y > 0) {
+      for(var i = 0; i < Fix.FRACTIONAL_BITS + 2; i++) {
+        if(y > 0) {
           xNew = x + (y >> i);
           yNew = y - (x >> i);
           angle += CordicAngles[i];
         }
-        else if (y < 0) {
+        else if(y < 0) {
           xNew = x - (y >> i);
           yNew = y + (x >> i);
           angle -= CordicAngles[i];
@@ -237,16 +235,16 @@ namespace FixedPointy {
     }
 
     public static Fix Pow(Fix b, Fix exp) {
-      if (b == 1 || exp == 0)
+      if(b == 1 || exp == 0)
         return 1;
 
       int intPow;
       Fix intFactor;
-      if ((exp.Raw & Fix.FRACTION_MASK) == 0) {
+      if((exp.Raw & Fix.FRACTION_MASK) == 0) {
         intPow = (exp.Raw + (Fix.FRACTION_RANGE >> 1)) >> Fix.FRACTIONAL_BITS;
         Fix t;
         int p;
-        if (intPow < 0) {
+        if(intPow < 0) {
           t = 1 / b;
           p = -intPow;
         }
@@ -256,8 +254,8 @@ namespace FixedPointy {
         }
 
         intFactor = 1;
-        while (p > 0) {
-          if ((p & 1) != 0)
+        while(p > 0) {
+          if((p & 1) != 0)
             intFactor *= t;
           t *= t;
           p >>= 1;
@@ -274,13 +272,13 @@ namespace FixedPointy {
                 (exp.Raw - (intPow << Fix.FRACTIONAL_BITS)) * Ln2Const.Raw
                 + (Fix.FRACTION_RANGE >> 1)
               ) >> Fix.FRACTIONAL_BITS;
-      if (x == 0)
+      if(x == 0)
         return intFactor;
 
       var fracFactor = x;
       var xa = x;
-      for (var i = 2; i < InvFactConsts.Length; i++) {
-        if (xa == 0)
+      for(var i = 2; i < InvFactConsts.Length; i++) {
+        if(xa == 0)
           break;
 
         xa *= x;
@@ -300,12 +298,12 @@ namespace FixedPointy {
     }
 
     public static Fix Log(Fix value, Fix b) {
-      if (b == 2)
+      if(b == 2)
         return Log2(value);
 
-      if (b == E)
+      if(b == E)
         return Log(value);
-      if (b == 10)
+      if(b == 10)
         return Log10(value);
 
       return Log2(value) / Log2(b);
@@ -316,28 +314,28 @@ namespace FixedPointy {
     }
 
     private static Fix Log2(Fix value) {
-      if (value <= 0)
+      if(value <= 0)
         throw new ArgumentOutOfRangeException(nameof(value), "Value must be positive.");
 
       var x = (uint)value.Raw;
       var b = 1U << (Fix.FRACTIONAL_BITS - 1);
       uint y = 0;
 
-      while (x < 1U << Fix.FRACTIONAL_BITS) {
+      while(x < 1U << Fix.FRACTIONAL_BITS) {
         x <<= 1;
         y -= 1U << Fix.FRACTIONAL_BITS;
       }
 
-      while (x >= 2U << Fix.FRACTIONAL_BITS) {
+      while(x >= 2U << Fix.FRACTIONAL_BITS) {
         x >>= 1;
         y += 1U << Fix.FRACTIONAL_BITS;
       }
 
       ulong z = x;
 
-      for (var i = 0; i < Fix.FRACTIONAL_BITS; i++) {
+      for(var i = 0; i < Fix.FRACTIONAL_BITS; i++) {
         z = (z * z) >> Fix.FRACTIONAL_BITS;
-        if (z >= 2U << Fix.FRACTIONAL_BITS) {
+        if(z >= 2U << Fix.FRACTIONAL_BITS) {
           z >>= 1;
           y += b;
         }

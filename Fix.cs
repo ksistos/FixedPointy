@@ -44,11 +44,11 @@ namespace FixedPointy {
     public static readonly Fix Epsilon = new Fix(1);
 
     static Fix() {
-      if (FRACTIONAL_BITS < 8)
+      if(FRACTIONAL_BITS < 8)
         throw new Exception("Fix must have at least 8 fractional bits.");
-      if (INTEGER_BITS < 10)
+      if(INTEGER_BITS < 10)
         throw new Exception("Fix must have at least 10 integer bits.");
-      if (FRACTIONAL_BITS % 2 == 1)
+      if(FRACTIONAL_BITS % 2 == 1)
         throw new Exception("Fix must have an even number of fractional and integer bits.");
     }
 
@@ -61,7 +61,7 @@ namespace FixedPointy {
     public static int MaxInteger => MAX_INTEGER;
 
     public static Fix Mix(int integer, int numerator, int denominator) {
-      if (numerator < 0 || denominator < 0)
+      if(numerator < 0 || denominator < 0)
         throw new ArgumentException("Ratio must be positive.");
 
       var fraction = (int)((long)FRACTION_RANGE * numerator / denominator) & FRACTION_MASK;
@@ -83,7 +83,7 @@ namespace FixedPointy {
     }
 
     public static explicit operator int(Fix value) {
-      if (value.Raw > 0)
+      if(value.Raw > 0)
         return value.Raw >> FRACTIONAL_BITS;
 
       return (value.Raw + FRACTION_MASK) >> FRACTIONAL_BITS;
@@ -95,7 +95,7 @@ namespace FixedPointy {
 
     // NOTE: Don't use it without reason
     public static implicit operator Fix(float value) {
-      var m = 10000;
+      const int m = 10000;
       Fix fix = (int)(value * m);
       fix /= m;
       return fix;
@@ -177,13 +177,13 @@ namespace FixedPointy {
 
     public override string ToString() {
       var sb = new StringBuilder();
-      if (Raw < 0)
+      if(Raw < 0)
         sb.Append(CultureInfo.CurrentCulture.NumberFormat.NegativeSign);
       var abs = (int)this;
       abs = abs < 0 ? -abs : abs;
       sb.Append(abs.ToString());
       var fraction = (ulong)(Raw & FRACTION_MASK);
-      if (fraction == 0)
+      if(fraction == 0)
         return sb.ToString();
 
       fraction = Raw < 0 ? FRACTION_RANGE - fraction : fraction;

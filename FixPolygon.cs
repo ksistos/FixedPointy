@@ -43,7 +43,7 @@ namespace FixedPointy {
     }
 
     private void BuildEdges() {
-      for (var p = 0; p < Points.Length; p++) {
+      for(var p = 0; p < Points.Length; p++) {
         var p1 = Points[p];
         var p2 = p + 1 >= Points.Length ? Points[0] : Points[p + 1];
         Edges[p] = p2 - p1;
@@ -54,7 +54,7 @@ namespace FixedPointy {
       get {
         Fix totalX = 0;
         Fix totalY = 0;
-        foreach (var p in Points) {
+        foreach(var p in Points) {
           totalX += p.X;
           totalY += p.Y;
         }
